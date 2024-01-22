@@ -1,3 +1,11 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["airbnb-base", "prettier", "next/core-web-vitals"],
+  "plugins": ["prettier"],
+  "parserOptions": {
+      "project": "./tsconfig.json"
+  },
+  "rules": {
+    "prettier/prettier": ["error"],
+    "import/extensions": ["error", "ignorePackages", { "js": "never", "jsx": "never", "ts": "never", "tsx": "never" }]
+  }
 }

@@ -1,0 +1,94 @@
+/* Block: TopNav */
+.topNav {
+  display: flex;
+  background-color: #23856d;
+  color: #fff;
+  padding: 16px 32px;
+  justify-content: space-between;
+  width: 100%;
+  box-shadow: none;
+}
+
+/* Block: Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Montserrat";
+}
+
+/* Block: Links */
+a {
+  color: #fff;
+  text-decoration: none !important;
+}
+
+/* Block: Paragraphs */
+p {
+  margin: 0;
+}
+
+/* Block: Colors */
+.color-main {
+  color: #252b42;
+}
+
+.color-secondary {
+  color: #737373;
+}
+
+/* Block: Text Icon Align */
+.textIconAlign {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Block: Flex */
+.flex {
+  display: flex;
+}
+
+/* Block: Ellipse */
+.ellipse {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+/* Block: Background Colors */
+.bg-blue {
+  background-color: #23a6f0;
+}
+
+.bg-green {
+  background-color: #2dc071;
+}
+
+.bg-orange {
+  background-color: #e77c40;
+}
+
+.bg-black {
+  background-color: #252b42;
+}
+
+/* Block: Icon Button Bordered */
+.icon-btn-bordered {
+  border: 1px solid #e8e8e8 !important;
+  color: #252b42 !important;
+}
+
+
+body {
+  max-width: 1920px; margin: 0 auto !important;
+}
+
+.b__banner {
+  background-image: url("../assets//img/bottom_banner.png");
+  background-size: cover;
+}
