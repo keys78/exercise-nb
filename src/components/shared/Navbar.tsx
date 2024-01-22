@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { Suspense, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -18,9 +18,10 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
 import Modal from '@mui/material/Modal'
-import WishlistItem from '../wishlist/WishlistItem'
-import CartItem from '../cart/CartItem'
 import { RootState } from '../../redux/network/store'
+
+const WishlistItem = lazy(() => import('../wishlist/WishlistItem'))
+const CartItem = lazy(() => import('../cart/CartItem'))
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -138,7 +139,7 @@ function Navbar() {
               onClose={handleCloseNavMenu}
               marginThreshold={0}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'block', md: 'none', border: '2px solid #000' },
                 width: '100%',
                 maxWidth: '100%',
                 left: 0,
@@ -147,7 +148,9 @@ function Navbar() {
             >
               <MenuItem>
                 <Typography textAlign="center" width={'100%'}>
-                  Home
+                  <Button href="/" sx={{ color: '#635c5c' }}>
+                    Home
+                  </Button>
                 </Typography>
               </MenuItem>
               <MenuItem>
@@ -187,17 +190,29 @@ function Navbar() {
               </MenuItem>
               <MenuItem>
                 <Button sx={{ margin: 'auto' }}>
-                  <SearchOutlinedIcon />
+                  <Button sx={{ margin: 'auto' }} aria-label="Search">
+                    <SearchOutlinedIcon />
+                  </Button>
                 </Button>
               </MenuItem>
               <MenuItem>
-                <IconButton sx={{ margin: 'auto' }} onClick={handleOpen}>
+                <IconButton
+                  sx={{ margin: 'auto' }}
+                  name="cart"
+                  onClick={handleOpen}
+                  aria-label={`Open Cart (${cart.length} items)`}
+                >
                   <ShoppingCartOutlinedIcon />
                   <span> {cart.length > 0 ? cart.length : null}</span>
                 </IconButton>
               </MenuItem>
               <MenuItem>
-                <Button sx={{ margin: 'auto' }} onClick={handleOpenModalWL}>
+                <Button
+                  sx={{ margin: 'auto' }}
+                  name="favorite"
+                  onClick={handleOpenModalWL}
+                  aria-label={`Open Wishlist (${wishlist.length} items)`}
+                >
                   <FavoriteBorderOutlinedIcon />
                   <span> {wishlist.length > 0 ? wishlist.length : null}</span>
                 </Button>
@@ -284,101 +299,105 @@ function Navbar() {
           </Box>
         </Toolbar>
       </Container>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <>
-          <Box sx={style}>
-            <Typography
-              id="modal-modal-title"
-              variant="h2"
-              component="h2"
-              fontSize={'32px'}
-              fontWeight={'700'}
-              borderBottom={'1px solid #212121'}
-            >
-              Cart
-            </Typography>
-            {cart?.map((item: any) => (
-              <CartItem
-                key={item.id}
-                id={item.id}
-                image={item.image}
-                title={item.title}
-                price={item.price}
-                quantity={item.quantity}
-              />
-            ))}
+      <Suspense fallback={<div>Loading...</div>}>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <>
+            <Box sx={style}>
+              <Typography
+                id="modal-modal-title"
+                variant="h2"
+                component="h2"
+                fontSize={'32px'}
+                fontWeight={'700'}
+                borderBottom={'1px solid #212121'}
+              >
+                Cart
+              </Typography>
+              {cart?.map((item: any) => (
+                <CartItem
+                  key={item.id}
+                  id={item.id}
+                  image={item.image}
+                  title={item.title}
+                  price={item.price}
+                  quantity={item.quantity}
+                />
+              ))}
 
-            <Box
-              marginTop="24px"
-              padding="8px"
-              gridTemplateColumns="repeat(12, 1fr)"
-              gap={1}
-              sx={{
-                display: { xs: 'block', md: 'grid' },
-              }}
-            >
-              <Box gridColumn="span 6">
-                <Typography
-                  variant="subtitle2"
-                  fontWeight={700}
-                  color="#252B42"
-                  fontSize="16px"
-                  marginBottom={'14px'}
-                >
-                  ORDER SUMMARY
-                </Typography>
-              </Box>
-              <Box gridColumn="span 6" textAlign={'right'}>
-                <Typography
-                  variant="subtitle2"
-                  fontWeight={400}
-                  color="#252B42"
-                  fontSize="16px"
-                  marginBottom={'14px'}
-                >
-                  SUBTOTAL({getTotal(cart).totalQuantity}):{' '}
-                  <strong>${getTotal(cart).totalPrice}</strong>
-                </Typography>
+              <Box
+                marginTop="24px"
+                padding="8px"
+                gridTemplateColumns="repeat(12, 1fr)"
+                gap={1}
+                sx={{
+                  display: { xs: 'block', md: 'grid' },
+                }}
+              >
+                <Box gridColumn="span 6">
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={700}
+                    color="#252B42"
+                    fontSize="16px"
+                    marginBottom={'14px'}
+                  >
+                    ORDER SUMMARY
+                  </Typography>
+                </Box>
+                <Box gridColumn="span 6" textAlign={'right'}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={400}
+                    color="#252B42"
+                    fontSize="16px"
+                    marginBottom={'14px'}
+                  >
+                    SUBTOTAL({getTotal(cart).totalQuantity}):{' '}
+                    <strong>${getTotal(cart).totalPrice}</strong>
+                  </Typography>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </>
-      </Modal>
+          </>
+        </Modal>
+      </Suspense>
 
-      <Modal
-        open={openModalWL}
-        onClose={handleCloseModalWL}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <>
-          <Box sx={style}>
-            <Typography
-              id="modal-modal-title"
-              variant="h2"
-              component="h2"
-              fontSize={'32px'}
-              fontWeight={'700'}
-              borderBottom={'1px solid #212121'}
-            >
-              Wishlist
-            </Typography>
-            {wishlist?.map((item: any) => (
-              <WishlistItem
-                key={item.id}
-                id={item.id}
-                image={item.image}
-                title={item.title}
-              />
-            ))}
-          </Box>
-        </>
-      </Modal>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Modal
+          open={openModalWL}
+          onClose={handleCloseModalWL}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <>
+            <Box sx={style}>
+              <Typography
+                id="modal-modal-title"
+                variant="h2"
+                component="h2"
+                fontSize={'32px'}
+                fontWeight={'700'}
+                borderBottom={'1px solid #212121'}
+              >
+                Wishlist
+              </Typography>
+              {wishlist?.map((item: any) => (
+                <WishlistItem
+                  key={item.id}
+                  id={item.id}
+                  image={item.image}
+                  title={item.title}
+                />
+              ))}
+            </Box>
+          </>
+        </Modal>
+      </Suspense>
     </AppBar>
   )
 }

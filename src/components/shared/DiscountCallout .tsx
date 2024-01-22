@@ -17,7 +17,7 @@ function DiscountCallout() {
           display: { xs: 'none', md: 'flex' },
         }}
       >
-        <div className="topNav">
+        <div className="top__nav">
           <div className="flex">
             <Typography
               variant="subtitle2"

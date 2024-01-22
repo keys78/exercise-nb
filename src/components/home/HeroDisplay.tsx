@@ -31,6 +31,7 @@ function ProductItem({ image, subtitle, title }: ProductItemProps) {
         src={image}
         alt="Some text"
         style={{ width: '100%', height: 'auto' }}
+        loading="eager"
       />
       <Box position="absolute" top="24px" left="24px">
         <Typography
